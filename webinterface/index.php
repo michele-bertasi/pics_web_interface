@@ -53,6 +53,8 @@
 if(!isset($_GET['page']))
 	$_GET['page'] = 1;
 
+$pics_path='pics';
+
 $aantal = 16;	
 $j = 0;
 $begin = ($_GET['page']-1)*$aantal;
@@ -70,7 +72,7 @@ else
 echo "<div class='month'>You're watching: $current</div><ul id='month_list' style='overflow:hidden'>";
 
 
-if ($handle = opendir('pics') ) {
+if ($handle = opendir($pics_path) ) {
 	$months = array();
 	while (false !== ($entry = readdir($handle))) {  	
         if($entry != "." && $entry != ".."){
@@ -92,7 +94,7 @@ if ($handle = opendir('pics') ) {
 echo "</ul>";
 
     	
-    $filecount = count(glob("pics/$current/" .  "*.jpg"));
+    $filecount = count(glob("$pics_path/$current/" .  "*.jpg"));
 	
 	echo "<h2>There are $filecount images available</h2><br/>";
     	
@@ -104,12 +106,12 @@ if($current_hour==0)
 echo "<a href='index.php?dag=$current'  class='button' >Look sequentially</a>&nbsp;&nbsp;&nbsp;<a  class='button'  href='index.php?dag=$current&uur=".$current_hour."'>Look hourly</a><br/><br/>";
 
 
-if(is_dir("pics/$current")){
+if(is_dir("$pics_path/$current")){
 if(!isset($_GET['uur'])){
 
 
 
-if ($handle = opendir("pics/$current") ) {
+if ($handle = opendir("$pics_path/$current") ) {
 
     /* This is the correct way to loop over the directory. */
     $stack = array();
@@ -147,7 +149,8 @@ if ($handle = opendir("pics/$current") ) {
     	$min = substr($stack[$f],12,2);
     	$sec = substr($stack[$f],14,2);
     	
-    	echo "<td style='text-align:center'><a class='vergroot' title='".$dag." ".$maand." ". $jaar ." - ".$uur. ":" . $min. ":". $sec."' rel='reeks' href='pics/".substr($stack[$f],0,9)."/$stack[$f]'><img src='pics/".substr($stack[$f],0,9)."/$stack[$f]' width='300' style='float:left;'><br/>".$dag." ".$maand." ". $jaar . " - ".$uur. ":" . $min. ":". $sec. "</td></a>";
+    	echo "<td style='text-align:center'><a class='vergroot' title='".$dag."
+        ".$maand." ". $jaar ." - ".$uur. ":" . $min. ":". $sec."' rel='reeks' href='$pics_path/".substr($stack[$f],0,9)."/$stack[$f]'><img src='$pics_path/".substr($stack[$f],0,9)."/$stack[$f]' width='300' style='float:left;'><br/>".$dag." ".$maand." ". $jaar . " - ".$uur. ":" . $min. ":". $sec. "</td></a>";
     }
     echo "</tr></table>";
     
@@ -167,7 +170,7 @@ echo "<br/><br/><br/>";
 	}
 	echo "<br/><br/><br/>";
 	
-	if ($handle = opendir("pics/$current") ) {
+	if ($handle = opendir("$pics_path/$current") ) {
 
     /* This is the correct way to loop over the directory. */
     $stack = array();
@@ -200,7 +203,8 @@ echo "<br/><br/><br/>";
     	$min = substr($stack[$f],12,2);
     	$sec = substr($stack[$f],14,2);
     	
-    	echo "<td style='text-align:center'><a class='vergroot' title='".$dag." ".$maand." ". $jaar ." - ".$uur. ":" . $min. ":". $sec."' rel='24feb' href='pics/".substr($stack[$f],0,9)."/$stack[$f]'><img src='pics/".substr($stack[$f],0,9)."/$stack[$f]' width='300' style='float:left;'><br/>".$dag." ".$maand." ". $jaar . " - ".$uur. ":" . $min. ":". $sec. "</td></a>";
+    	echo "<td style='text-align:center'><a class='vergroot' title='".$dag."
+        ".$maand." ". $jaar ." - ".$uur. ":" . $min. ":". $sec."' rel='24feb' href='$pics_path/".substr($stack[$f],0,9)."/$stack[$f]'><img src='$pics_path/".substr($stack[$f],0,9)."/$stack[$f]' width='300' style='float:left;'><br/>".$dag." ".$maand." ". $jaar . " - ".$uur. ":" . $min. ":". $sec. "</td></a>";
     }
     echo "</tr></table>";
     
