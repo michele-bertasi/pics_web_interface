@@ -62,14 +62,18 @@ $end = $begin+$aantal;
 
 if(!isset($_GET['dag'])){
 	$dag = date("d",time());
-	$maand = substr(date("F",time()),0,3);
+	$maand = date("m",time());
 	$jaar = date("Y",time());
-	$current = $dag.$maand.$jaar;
+	$current = "$jaar-$maand-$dag";
 }
-else
+else {
 	$current = $_GET['dag'];
+    $dag = substr($current,8,2);
+    $maand = substr($current,5,2);
+    $jaar = substr($current,0,4);
+}
 
-echo "<div class='month'>You're watching: $current</div><ul id='month_list' style='overflow:hidden'>";
+echo "<div class='month'>You're watching: $dag/$maand/$jaar</div><ul id='month_list' style='overflow:hidden'>";
 
 
 if ($handle = opendir($pics_path) ) {
@@ -83,11 +87,11 @@ if ($handle = opendir($pics_path) ) {
     
     
     for($f = 0; $f < count($months); $f++){
-    	$dag = substr($months[$f],0,2);
-			$maand = substr($months[$f],2,3);
-			$jaar =  substr($months[$f],5,4);
+        $dag = substr($months[$f],8,2);
+		$maand = substr($months[$f],5,2);
+		$jaar =  substr($months[$f],0,4);
         
-        	echo "<li  class='button' style='float:left'><a style='text-decoration:none;color: #fff;' href='index.php?page=1&dag=".$dag.$maand.$jaar."'>".$dag.$maand.$jaar."</a></li>";
+        echo "<li  class='button' style='float:left'><a style='text-decoration:none;color: #fff;' href='index.php?page=1&dag=$jaar-$maand-$dag'>$dag/$maand/$jaar</a></li>";
         	
         	}
 }
@@ -103,7 +107,7 @@ $current_hour = date("G",time());
 if($current_hour==0)
 	$current_hour = 24;
 
-echo "<a href='index.php?dag=$current'  class='button' >Look sequentially</a>&nbsp;&nbsp;&nbsp;<a  class='button'  href='index.php?dag=$current&uur=".$current_hour."'>Look hourly</a><br/><br/>";
+echo "<a href='index.php?dag=$current'  class='button' >Look sequentially</a>&nbsp;&nbsp;&nbsp;<a  class='button'  href='index.php?dag=$current&uur=$current_hour'>Look hourly</a><br/><br/>";
 
 
 if(is_dir("$pics_path/$current")){
@@ -133,7 +137,7 @@ if ($handle = opendir("$pics_path/$current") ) {
     	if($f%20==0)
 			echo "<br/><br/><br/>";
     	if($_GET['page']==$f+1)
-	    	echo "<a  class='button'  href='index.php?page=".($f+1)."&dag=".$current."'><span style='text-decoration:underline;color:#B23232;'>". ($f+1) ."</span></a>";
+	    	echo "<a  class='button'  href='index.php?page=". ($f+1) ."&dag=$current'><span style='text-decoration:underline;color:#B23232;'>". ($f+1) ."</span></a>";
     	else
     		echo "<a class='button'  href='index.php?page=".($f+1)."&dag=".$current."'><span>". ($f+1) ."</span></a>";
     }
@@ -145,12 +149,15 @@ if ($handle = opendir("$pics_path/$current") ) {
     	if($i%$cols == 0)
     		echo "</tr><tr>";
     	$i++;
-    	$uur = substr($stack[$f],10,2)+1;
-    	$min = substr($stack[$f],12,2);
-    	$sec = substr($stack[$f],14,2);
+    	$uur = substr($stack[$f],11,2);
+    	$min = substr($stack[$f],14,2);
+    	$sec = substr($stack[$f],17,2);
     	
-    	echo "<td style='text-align:center'><a class='vergroot' title='".$dag."
-        ".$maand." ". $jaar ." - ".$uur. ":" . $min. ":". $sec."' rel='reeks' href='$pics_path/".substr($stack[$f],0,9)."/$stack[$f]'><img src='$pics_path/".substr($stack[$f],0,9)."/$stack[$f]' width='300' style='float:left;'><br/>".$dag." ".$maand." ". $jaar . " - ".$uur. ":" . $min. ":". $sec. "</td></a>";
+    	echo "<td style='text-align:center'><a class='vergroot'
+            title='$dag/$maand/$jaar - $uur:$min:$sec'
+            rel='reeks' href='$pics_path/". substr($stack[$f],0,10) ."/". $stack[$f] ."'>
+                <img src='$pics_path/". substr($stack[$f],0,10) ."/". $stack[$f]
+                ."' width='300' style='float:left;'><br/>$dag/$maand/$jaar - $uur:$min:$sec</td></a>";
     }
     echo "</tr></table>";
     
@@ -164,9 +171,9 @@ echo "<br/><br/><br/>";
 		if($i%14==0)
 			echo "<br/><br/><br/><br/>";
 		if($_GET['uur']==$i)
-    		echo "<a class='button' href='index.php?dag=".$current."&uur=$i'><span style='text-decoration:underline;color:#B23232;'>".$i." u</span></a>&nbsp;&nbsp;&nbsp;";
+    		echo "<a class='button' href='index.php?dag=$current&uur=$i'><span style='text-decoration:underline;color:#B23232;'>$i u</span></a>&nbsp;&nbsp;&nbsp;";
     	else
-		echo "<a class='button' href='index.php?dag=".$current."&uur=$i'>".$i." u</a>&nbsp;&nbsp;&nbsp;";
+		echo "<a class='button' href='index.php?dag=$current&uur=$i'>$i u</a>&nbsp;&nbsp;&nbsp;";
 	}
 	echo "<br/><br/><br/>";
 	
@@ -177,7 +184,7 @@ echo "<br/><br/><br/>";
 
     while (false !== ($entry = readdir($handle))) {  
     	
-	   $uur =  substr($entry,10,2)+1;
+	   $uur =  substr($entry,11,2);
 	   if($uur == 0)
 		   $uur = 24;
 	   
@@ -195,16 +202,19 @@ echo "<br/><br/><br/>";
     		echo "</tr><tr>";
     	$i++;
     	
-    	$dag = substr($stack[$f],0,2);
-		$maand = substr($stack[$f],2,3);
-		$jaar =  substr($stack[$f],5,4);
+    	$dag = substr($stack[$f],8,2);
+		$maand = substr($stack[$f],5,2);
+		$jaar =  substr($stack[$f],0,4);
+
+    	$uur = substr($stack[$f],11,2);
+    	$min = substr($stack[$f],14,2);
+    	$sec = substr($stack[$f],17,2);
     	
-    	$uur = substr($stack[$f],10,2)+1;
-    	$min = substr($stack[$f],12,2);
-    	$sec = substr($stack[$f],14,2);
-    	
-    	echo "<td style='text-align:center'><a class='vergroot' title='".$dag."
-        ".$maand." ". $jaar ." - ".$uur. ":" . $min. ":". $sec."' rel='24feb' href='$pics_path/".substr($stack[$f],0,9)."/$stack[$f]'><img src='$pics_path/".substr($stack[$f],0,9)."/$stack[$f]' width='300' style='float:left;'><br/>".$dag." ".$maand." ". $jaar . " - ".$uur. ":" . $min. ":". $sec. "</td></a>";
+    	echo "<td style='text-align:center'><a class='vergroot'
+            title='$dag/$maand/$jaar - $uur:$min:$sec' rel='24feb'
+            href='$pics_path/". substr($stack[$f],0,10) ."/". $stack[$f] ."'>
+            <img src='$pics_path/". substr($stack[$f],0,10) ."/". $stack[$f] ."'
+            width='300' style='float:left;'><br/>$dag/$maand/$jaar - $uur:$min:$sec</td></a>";
     }
     echo "</tr></table>";
     
