@@ -91,7 +91,7 @@ if ($handle = opendir($pics_path) ) {
 		$maand = substr($months[$f],5,2);
 		$jaar =  substr($months[$f],0,4);
         
-        echo "<li  class='button' style='float:left'><a style='text-decoration:none;color: #fff;' href='index.php?page=1&dag=$jaar-$maand-$dag'>$dag/$maand/$jaar</a></li>";
+        echo "<li  class='button' style='float:left'><a style='text-decoration:none;color: #fff;' href='archive.php?page=1&dag=$jaar-$maand-$dag'>$dag/$maand/$jaar</a></li>";
         	
         	}
 }
@@ -107,7 +107,7 @@ $current_hour = date("G",time());
 if($current_hour==0)
 	$current_hour = 24;
 
-echo "<a href='index.php?dag=$current'  class='button' >Look sequentially</a>&nbsp;&nbsp;&nbsp;<a  class='button'  href='index.php?dag=$current&uur=$current_hour'>Look hourly</a><br/><br/>";
+echo "<a href='archive.php?dag=$current'  class='button' >Look sequentially</a>&nbsp;&nbsp;&nbsp;<a  class='button'  href='archive.php?dag=$current&uur=$current_hour'>Look hourly</a><br/><br/>";
 
 
 if(is_dir("$pics_path/$current")){
@@ -137,9 +137,9 @@ if ($handle = opendir("$pics_path/$current") ) {
     	if($f%20==0)
 			echo "<br/><br/><br/>";
     	if($_GET['page']==$f+1)
-	    	echo "<a  class='button'  href='index.php?page=". ($f+1) ."&dag=$current'><span style='text-decoration:underline;color:#B23232;'>". ($f+1) ."</span></a>";
+	    	echo "<a  class='button'  href='archive.php?page=". ($f+1) ."&dag=$current'><span style='text-decoration:underline;color:#B23232;'>". ($f+1) ."</span></a>";
     	else
-    		echo "<a class='button'  href='index.php?page=".($f+1)."&dag=".$current."'><span>". ($f+1) ."</span></a>";
+    		echo "<a class='button'  href='archive.php?page=".($f+1)."&dag=".$current."'><span>". ($f+1) ."</span></a>";
     }
     echo "</ul>";
         echo "<br/><br/>&nbsp;<br/>";
@@ -171,9 +171,9 @@ echo "<br/><br/><br/>";
 		if($i%14==0)
 			echo "<br/><br/><br/><br/>";
 		if($_GET['uur']==$i)
-    		echo "<a class='button' href='index.php?dag=$current&uur=$i'><span style='text-decoration:underline;color:#B23232;'>$i u</span></a>&nbsp;&nbsp;&nbsp;";
+    		echo "<a class='button' href='archive.php?dag=$current&uur=$i'><span style='text-decoration:underline;color:#B23232;'>$i u</span></a>&nbsp;&nbsp;&nbsp;";
     	else
-		echo "<a class='button' href='index.php?dag=$current&uur=$i'>$i u</a>&nbsp;&nbsp;&nbsp;";
+		echo "<a class='button' href='archive.php?dag=$current&uur=$i'>$i u</a>&nbsp;&nbsp;&nbsp;";
 	}
 	echo "<br/><br/><br/>";
 	
